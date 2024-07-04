@@ -1,15 +1,18 @@
 const express = require("express");
 import { Request, Response } from "express";
-import employeeRouter from "./employeeRouter";
-import loggerMiddleware from "./loggerMiddleware";
+import employeeRouter from "./routes/employee.routes";
+import loggerMiddleware from "./middleware/logger.middleware";
 import bodyParser from "body-parser";
-import dataSource from "./data-source";
+import dataSource from "./db/data-source.db";
+import errorMiddleware from "./middleware/error.middleware";
 
 const server = new express();
 
 server.use(bodyParser.json());
 server.use(loggerMiddleware);
 server.use("/employees", employeeRouter);
+
+server.use(errorMiddleware);
 
 server.get("/", (req: Request, res: Response) => {
   res.status(200).send("Hello World");
