@@ -6,6 +6,6 @@ export class CreateAddressDto {
   line: string;
 
   @IsNotEmpty()
-  @IsString()
+  @IsString({ message: "The pincode is not a string yo" })
   pincode: string;
 }

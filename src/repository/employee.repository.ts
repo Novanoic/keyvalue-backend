@@ -6,11 +6,11 @@ export class EmployeeRepository {
   constructor(private repository: Repository<Employee>) {}
 
   find = async () => {
-    return this.repository.find();
+    return this.repository.find({ relations: ["address"] });
   };
 
   findOneBy = async (filter: Partial<Employee>) => {
-    return this.repository.findOne({ where: filter });
+    return this.repository.findOne({ where: filter, relations: ["address"] });
   };
 
   create = async (newEmployee: Partial<Employee>) => {
