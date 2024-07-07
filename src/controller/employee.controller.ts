@@ -19,11 +19,9 @@ import { Role } from "../utils/role.enums";
 import { ErrorCodes } from "../utils/error.codes";
 
 class EmployeeController {
-  //   private employeeService: EmployeeService;
   public router: express.Router;
 
   constructor(private employeeService: EmployeeService) {
-    // this.employeeService = new EmployeeService();
     this.router = express.Router();
 
     this.router.get("/", this.getAllEmployees);
@@ -85,7 +83,7 @@ class EmployeeController {
     try {
       const role = req.role;
 
-      if (role != (Role.HR || Role.CEO)) {
+      if (role != Role.HR && role != Role.CEO) {
         console.log(req.name);
         throw new EntityNotFoundException(ErrorCodes.UNAUTHORIZED);
       } else {
@@ -100,6 +98,7 @@ class EmployeeController {
           employeeDto.name,
           employeeDto.age,
           employeeDto.address,
+          employeeDto.department,
           employeeDto.role,
           employeeDto.password
         );
@@ -118,7 +117,7 @@ class EmployeeController {
     try {
       const role = req.role;
 
-      if (role != Role.HR || Role.CEO) {
+      if (role != Role.HR && role != Role.CEO) {
         console.log(req.name);
         throw new EntityNotFoundException(ErrorCodes.UNAUTHORIZED);
       } else {
@@ -131,7 +130,6 @@ class EmployeeController {
           );
           throw error;
         }
-        res.status(200).send(employee);
         const employees = await this.employeeService.removeEmployee(employeeId);
         res.status(204).send(employees);
       }
@@ -158,6 +156,7 @@ class EmployeeController {
         employeeDto.name,
         employeeDto.age,
         employeeDto.address,
+        employeeDto.department,
         employeeDto.role,
         employeeDto.password
       );

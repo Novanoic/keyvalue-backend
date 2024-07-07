@@ -1,16 +1,20 @@
 const express = require("express");
 import { Request, Response } from "express";
 import employeeRouter from "./routes/employee.routes";
+import departmentRouter from "./routes/department.routes";
 import loggerMiddleware from "./middleware/logger.middleware";
 import bodyParser from "body-parser";
 import dataSource from "./db/data-source.db";
 import errorMiddleware from "./middleware/error.middleware";
+// import loginRouter from "./routes/login.routes";
 
 const server = new express();
 
 server.use(bodyParser.json());
 server.use(loggerMiddleware);
 server.use("/employees", employeeRouter);
+server.use("/department", departmentRouter);
+// server.use("/login", loginRouter);
 
 server.use(errorMiddleware);
 

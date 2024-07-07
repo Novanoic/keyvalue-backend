@@ -1,4 +1,4 @@
-import { UpdateResult } from "typeorm";
+import { Repository, UpdateResult } from "typeorm";
 import Employee from "../entity/employee.entity";
 import { EmployeeRepository } from "../repository/employee.repository";
 import Address from "../entity/address.entity";
@@ -11,11 +11,17 @@ import { JWT_SECRET, JWT_VALIDITY } from "../utils/constants";
 import EntityNotFoundException from "../exceptions/entitiynotfound.exception";
 import IncorrectPasswordException from "../exceptions/incorrectpassword.exception";
 import { ErrorCodes } from "../utils/error.codes";
+import Department from "../entity/department.entity";
+import { DepartmentRepository } from "../repository/department.repository";
+import dataSource from "../db/data-source.db";
+import { DepartmentService } from "./department.service";
 
 export class EmployeeService {
-  //   private employeerepository: EmployeeRepository;
+  private departmentservice: DepartmentService;
   constructor(private employeerepository: EmployeeRepository) {
-    // this.employeerepository = new EmployeeRepository();
+    this.departmentservice = new DepartmentService(
+      new DepartmentRepository(dataSource.getRepository(Department))
+    );
   }
 
   loginEmployee = async (email: string, password: string) => {
@@ -26,7 +32,7 @@ export class EmployeeService {
     const result = await bcrypt.compare(password, employee.password);
 
     if (!result) {
-      throw new IncorrectPasswordException("Password is incorrect");
+      throw new IncorrectPasswordException(ErrorCodes.INCORRECT_PASSWORD);
     }
 
     const payload: jwtPayload = {
@@ -55,6 +61,7 @@ export class EmployeeService {
     name: string,
     age: number,
     address: any,
+    department: any,
     role: Role,
     password: string
   ): Promise<Employee> => {
@@ -64,6 +71,11 @@ export class EmployeeService {
     newEmployee.age = age;
     newEmployee.role = role;
     newEmployee.password = password ? await bcrypt.hash(password, 10) : "";
+
+    const employeeDepartment = new Department();
+    employeeDepartment.name = department.name;
+
+    newEmployee.department = employeeDepartment;
 
     const newAddress = new Address();
     newAddress.line = address.line;
@@ -90,17 +102,24 @@ export class EmployeeService {
     name: string,
     age: number,
     address: any,
+    department: any,
     role: Role,
     password: string
   ): Promise<Employee> => {
     const employee = await this.employeerepository.findOneBy({ id });
+
+    // const currentdepartment = await this.departmentservice.getDepartmentByName(
+    //   department.name
+    // );
+
     employee.name = name;
     employee.email = email;
     employee.age = age;
+    employee.department.name = department.name;
     employee.address.line = address.line;
     employee.address.pincode = address.pincode;
     employee.role = role;
-    employee.password = password;
+    employee.password = password ? await bcrypt.hash(password, 10) : "";
 
     return this.employeerepository.create(employee);
   };

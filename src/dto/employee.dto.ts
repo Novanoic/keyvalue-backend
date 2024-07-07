@@ -10,6 +10,7 @@ import {
   minLength,
 } from "class-validator";
 import { CreateAddressDto } from "./address.dto";
+import { CreateDepartmentDto } from "./department.dto";
 import Address from "../entity/address.entity";
 import { Type } from "class-transformer";
 import "reflect-metadata";
@@ -33,6 +34,11 @@ export class CreateEmployeeDto {
   @ValidateNested({ each: true })
   @Type(() => CreateAddressDto)
   address: CreateAddressDto;
+
+  @IsNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => CreateDepartmentDto)
+  department: CreateDepartmentDto;
 
   @IsNotEmpty()
   @IsString()
