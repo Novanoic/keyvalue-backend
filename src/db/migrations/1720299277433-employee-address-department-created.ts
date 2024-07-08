@@ -19,7 +19,7 @@ export class EmployeeAddressDepartmentCreated1720299277433
       `ALTER TABLE "address" ADD CONSTRAINT "FK_7e77f562043393b08de949b804b" FOREIGN KEY ("employee_id") REFERENCES "employee"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`
     );
     await queryRunner.query(
-      `ALTER TABLE "employee" ADD CONSTRAINT "FK_ab4b655f2251cdc2acb9447a6d5" FOREIGN KEY ("department_name") REFERENCES "department"("name") ON DELETE RESTRICT ON UPDATE CASCADE`
+      `ALTER TABLE "employee" ADD CONSTRAINT "FK_ab4b655f2251cdc2acb9447a6d5" FOREIGN KEY ("department_name") REFERENCES "department"("name") ON DELETE CASCADE ON UPDATE CASCADE`
     );
   }
 

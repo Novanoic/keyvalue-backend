@@ -17,6 +17,7 @@ import { RequestWithUser } from "../utils/requestwithuser";
 import EntityNotFoundException from "../exceptions/entitiynotfound.exception";
 import { Role } from "../utils/role.enums";
 import { ErrorCodes } from "../utils/error.codes";
+import { LoginAuthenticationDto } from "../dto/login.dto";
 
 class EmployeeController {
   public router: express.Router;
@@ -24,9 +25,9 @@ class EmployeeController {
   constructor(private employeeService: EmployeeService) {
     this.router = express.Router();
 
-    this.router.get("/", this.getAllEmployees);
-    this.router.get("/:id", this.getEmployeeById);
-    this.router.put("/:id", this.updateEmployee);
+    this.router.get("/", authorize, this.getAllEmployees);
+    this.router.get("/:id", authorize, this.getEmployeeById);
+    this.router.put("/:id", authorize, this.updateEmployee);
     this.router.post("/", authorize, this.createEmployee);
     this.router.delete("/:id", authorize, this.removeEmployee);
     this.router.post("/login", this.loginEmployee);
@@ -38,8 +39,15 @@ class EmployeeController {
     next: express.NextFunction
   ) => {
     try {
-      const { email, password } = req.body;
-      const token = await this.employeeService.loginEmployee(email, password);
+      const employeeDto = plainToInstance(LoginAuthenticationDto, req.body);
+      const errors = await validate(employeeDto);
+      if (errors.length) {
+        throw new HttpException(400, `Please re-enter the credentials`);
+      }
+      const token = await this.employeeService.loginEmployee(
+        employeeDto.email,
+        employeeDto.password
+      );
       res.status(200).send({ data: token });
     } catch (err) {
       next(err);
@@ -47,29 +55,48 @@ class EmployeeController {
   };
 
   public getAllEmployees = async (
-    req: express.Request,
-    res: express.Response
-  ) => {
-    const employees = await this.employeeService.getAllEmployees();
-    res.status(200).send(employees);
-  };
-
-  public getEmployeeById = async (
-    req: express.Request,
+    req: RequestWithUser,
     res: express.Response,
     next: express.NextFunction
   ) => {
     try {
-      const employeeId = Number(req.params.id);
-      const employee = await this.employeeService.getEmployeeById(employeeId);
-      if (!employee) {
-        const error = new HttpException(
-          404,
-          `No employee found with the ID : ${req.params.id}`
-        );
-        throw error;
+      const role = req.role;
+
+      if (role != Role.HR && role != Role.CEO) {
+        console.log(req.name);
+        throw new EntityNotFoundException(ErrorCodes.UNAUTHORIZED);
+      } else {
+        const employees = await this.employeeService.getAllEmployees();
+        res.status(200).send(employees);
       }
-      res.status(200).send(employee);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  public getEmployeeById = async (
+    req: RequestWithUser,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    try {
+      const role = req.role;
+
+      if (role != Role.HR && role != Role.CEO) {
+        console.log(req.name);
+        throw new EntityNotFoundException(ErrorCodes.UNAUTHORIZED);
+      } else {
+        const employeeId = Number(req.params.id);
+        const employee = await this.employeeService.getEmployeeById(employeeId);
+        if (!employee) {
+          const error = new HttpException(
+            404,
+            `No employee found with the ID : ${req.params.id}`
+          );
+          throw error;
+        }
+        res.status(200).send(employee);
+      }
     } catch (err) {
       next(err);
     }
@@ -139,28 +166,35 @@ class EmployeeController {
   };
 
   public updateEmployee = async (
-    req: express.Request,
+    req: RequestWithUser,
     res: express.Response,
     next: express.NextFunction
   ) => {
     try {
-      const employeeDto = plainToInstance(CreateEmployeeDto, req.body);
-      const errors = await validate(employeeDto);
-      if (errors.length) {
-        console.log(errors);
-        throw new ValidationException(400, "Validation Failed", errors);
+      const role = req.role;
+
+      if (role != Role.HR && role != Role.CEO) {
+        console.log(req.name);
+        throw new EntityNotFoundException(ErrorCodes.UNAUTHORIZED);
+      } else {
+        const employeeDto = plainToInstance(CreateEmployeeDto, req.body);
+        const errors = await validate(employeeDto);
+        if (errors.length) {
+          console.log(errors);
+          throw new ValidationException(400, "Validation Failed", errors);
+        }
+        const employees = await this.employeeService.updateEmployee(
+          Number(req.params.id),
+          employeeDto.email,
+          employeeDto.name,
+          employeeDto.age,
+          employeeDto.address,
+          employeeDto.department,
+          employeeDto.role,
+          employeeDto.password
+        );
+        res.status(200).send(employees);
       }
-      const employees = await this.employeeService.updateEmployee(
-        Number(req.params.id),
-        employeeDto.email,
-        employeeDto.name,
-        employeeDto.age,
-        employeeDto.address,
-        employeeDto.department,
-        employeeDto.role,
-        employeeDto.password
-      );
-      res.status(200).send(employees);
     } catch (err) {
       next(err);
     }

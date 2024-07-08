@@ -7,6 +7,6 @@ export class LoginAuthenticationDto {
   email: string;
 
   @IsNotEmpty()
-  @IsString({ message: "The pincode is not a string yo" })
+  @IsString()
   password: string;
 }

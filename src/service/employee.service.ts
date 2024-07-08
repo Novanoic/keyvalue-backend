@@ -12,17 +12,9 @@ import EntityNotFoundException from "../exceptions/entitiynotfound.exception";
 import IncorrectPasswordException from "../exceptions/incorrectpassword.exception";
 import { ErrorCodes } from "../utils/error.codes";
 import Department from "../entity/department.entity";
-import { DepartmentRepository } from "../repository/department.repository";
-import dataSource from "../db/data-source.db";
-import { DepartmentService } from "./department.service";
 
 export class EmployeeService {
-  private departmentservice: DepartmentService;
-  constructor(private employeerepository: EmployeeRepository) {
-    this.departmentservice = new DepartmentService(
-      new DepartmentRepository(dataSource.getRepository(Department))
-    );
-  }
+  constructor(private employeerepository: EmployeeRepository) {}
 
   loginEmployee = async (email: string, password: string) => {
     const employee = await this.employeerepository.findOneBy({ email });
@@ -107,11 +99,7 @@ export class EmployeeService {
     password: string
   ): Promise<Employee> => {
     const employee = await this.employeerepository.findOneBy({ id });
-
-    // const currentdepartment = await this.departmentservice.getDepartmentByName(
-    //   department.name
-    // );
-
+    console.log(employee);
     employee.name = name;
     employee.email = email;
     employee.age = age;
