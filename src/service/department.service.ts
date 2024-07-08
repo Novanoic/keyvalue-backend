@@ -1,16 +1,6 @@
 import { UpdateResult } from "typeorm";
 import Department from "../entity/department.entity";
 import { DepartmentRepository } from "../repository/department.repository";
-import Address from "../entity/address.entity";
-import { Role } from "../utils/role.enums";
-import bcrypt from "bcrypt";
-import HttpException from "../exceptions/http.exception";
-import { jwtPayload } from "../utils/jwtPayload.type";
-import jsonwebtoken from "jsonwebtoken";
-import { JWT_SECRET, JWT_VALIDITY } from "../utils/constants";
-import EntityNotFoundException from "../exceptions/entitiynotfound.exception";
-import IncorrectPasswordException from "../exceptions/incorrectpassword.exception";
-import { ErrorCodes } from "../utils/error.codes";
 
 export class DepartmentService {
   constructor(private departmentrepository: DepartmentRepository) {}

@@ -3,28 +3,18 @@ import HttpException from "../exceptions/http.exception";
 import { DepartmentService } from "../service/department.service";
 import express from "express";
 import { CreateDepartmentDto } from "../dto/department.dto";
-import {
-  validate,
-  ValidateNested,
-  ValidatePromise,
-  ValidationTypes,
-  ValidatorOptions,
-} from "class-validator";
-import { ValidationMetadata } from "class-validator/types/metadata/ValidationMetadata";
+import { validate } from "class-validator";
 import ValidationException from "../exceptions/validation.exception";
 import authorize from "../middleware/authentication.middleware";
 import { RequestWithUser } from "../utils/requestwithuser";
 import EntityNotFoundException from "../exceptions/entitiynotfound.exception";
 import { Role } from "../utils/role.enums";
 import { ErrorCodes } from "../utils/error.codes";
-import { error } from "console";
 
 class DepartmentController {
-  //   private employeeService: EmployeeService;
   public router: express.Router;
 
   constructor(private departmentService: DepartmentService) {
-    // this.employeeService = new EmployeeService();
     this.router = express.Router();
 
     this.router.get("/", authorize, this.getAllDepartments);

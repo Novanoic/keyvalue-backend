@@ -3,13 +3,7 @@ import HttpException from "../exceptions/http.exception";
 import { EmployeeService } from "../service/employee.service";
 import express from "express";
 import { CreateEmployeeDto } from "../dto/employee.dto";
-import {
-  validate,
-  ValidateNested,
-  ValidatePromise,
-  ValidationTypes,
-  ValidatorOptions,
-} from "class-validator";
+import { validate } from "class-validator";
 import { ValidationMetadata } from "class-validator/types/metadata/ValidationMetadata";
 import ValidationException from "../exceptions/validation.exception";
 import authorize from "../middleware/authentication.middleware";

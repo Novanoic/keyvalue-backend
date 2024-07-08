@@ -4,7 +4,6 @@ import { EmployeeRepository } from "../repository/employee.repository";
 import Address from "../entity/address.entity";
 import { Role } from "../utils/role.enums";
 import bcrypt from "bcrypt";
-import HttpException from "../exceptions/http.exception";
 import { jwtPayload } from "../utils/jwtPayload.type";
 import jsonwebtoken from "jsonwebtoken";
 import { JWT_SECRET, JWT_VALIDITY } from "../utils/constants";
@@ -12,9 +11,14 @@ import EntityNotFoundException from "../exceptions/entitiynotfound.exception";
 import IncorrectPasswordException from "../exceptions/incorrectpassword.exception";
 import { ErrorCodes } from "../utils/error.codes";
 import Department from "../entity/department.entity";
+import { DepartmentService } from "./department.service";
+import HttpException from "../exceptions/http.exception";
 
 export class EmployeeService {
-  constructor(private employeerepository: EmployeeRepository) {}
+  constructor(
+    private employeerepository: EmployeeRepository,
+    private departmentservice: DepartmentService
+  ) {}
 
   loginEmployee = async (email: string, password: string) => {
     const employee = await this.employeerepository.findOneBy({ email });
@@ -99,11 +103,27 @@ export class EmployeeService {
     password: string
   ): Promise<Employee> => {
     const employee = await this.employeerepository.findOneBy({ id });
-    console.log(employee);
+    if(!employee){
+      const error = new HttpException(
+        404,
+        `No employee found with the ID : ${id}`
+      );
+      throw error;
+    }
+    const updatedDepartment = await this.departmentservice.getDepartmentByName(
+      department.name
+    );
+    if(!updatedDepartment){
+      const error = new HttpException(
+        404,
+        `No department found with this name : ${department.name}`
+      );
+      throw error;
+    }
     employee.name = name;
     employee.email = email;
     employee.age = age;
-    employee.department.name = department.name;
+    employee.department.name = updatedDepartment.name;
     employee.address.line = address.line;
     employee.address.pincode = address.pincode;
     employee.role = role;
