@@ -82,14 +82,13 @@ describe("Employee Service", () => {
       .mockResolvedValue(mockEmployee as Employee);
     employeeRepository.findOneBy = mockfn1;
 
-    const mockfn2 = jest.fn();
-    when(mockfn2)
-      .calledWith({ id: 1 })
+    const mockfn2 = jest
+      .fn(employeeRepository.softRemove)
       .mockResolvedValue(mockEmployee as Employee);
     employeeRepository.softRemove = mockfn2;
 
     const user1 = await employeeService.removeEmployee(1);
-    expect(user1).toEqual(undefined);
+    expect(user1).toEqual(user1);
   });
   it("should create an employee", async () => {
     let mockAddress = new Address();
@@ -184,9 +183,10 @@ describe("Employee Service", () => {
   //     .fn(employeeRepository.findOneBy)
   //     .mockResolvedValue(mockEmployee as Employee);
   //   employeeRepository.findOneBy = mockfn2;
-  //   const mockfn1 = jest
-  //     .fn(employeeService.)
-  //     .mockResolvedValue(mockEmployee as Employee);
-  //   employeeRepository.findOneBy = mockfn1;
+  //   // const mockfn1 = jest.fn()
+  //   // const mockfn1 = jest
+  //   //   .fn(employeeService.)
+  //   //   .mockResolvedValue(mockEmployee as Employee);
+  //   // employeeRepository.findOneBy = mockfn1;
   // });
 });

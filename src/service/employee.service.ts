@@ -87,7 +87,7 @@ export class EmployeeService {
     return this.employeerepository.removeBy(employee);
   };
 
-  removeEmployee = async (id: number): Promise<Employee> => {
+  removeEmployee = async (id: number): Promise<Employee> | null => {
     const employee = await this.employeerepository.findOneBy({ id });
     return this.employeerepository.softRemove(employee);
   };
@@ -103,7 +103,7 @@ export class EmployeeService {
     password: string
   ): Promise<Employee> => {
     const employee = await this.employeerepository.findOneBy({ id });
-    if(!employee){
+    if (!employee) {
       const error = new HttpException(
         404,
         `No employee found with the ID : ${id}`
@@ -113,7 +113,7 @@ export class EmployeeService {
     const updatedDepartment = await this.departmentservice.getDepartmentByName(
       department.name
     );
-    if(!updatedDepartment){
+    if (!updatedDepartment) {
       const error = new HttpException(
         404,
         `No department found with this name : ${department.name}`

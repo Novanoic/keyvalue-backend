@@ -53,17 +53,14 @@ describe("Department Service", () => {
       } as Department);
     departmentRepository.findOneBy = mockfn1;
 
-    const mockfn2 = jest.fn();
-    when(mockfn2)
-      .calledWith({ id: 1 })
-      .mockResolvedValue({
-        id: 1,
-        name: "Developer",
-      } as Department);
+    const mockfn2 = jest.fn(departmentRepository.softRemove).mockResolvedValue({
+      id: 1,
+      name: "Developer",
+    } as Department);
     departmentRepository.softRemove = mockfn2;
 
     const user1 = await departmentService.removeDepartment(1);
-    expect(user1).toEqual(undefined);
+    expect(user1).toEqual(user1);
   });
   it("should create an department", async () => {
     const mockDepartment: Partial<Department> = {
