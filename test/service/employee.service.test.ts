@@ -54,7 +54,7 @@ describe("Employee Service", () => {
         role: "Developer",
         address: {
           line: "Thrissur",
-          pincode: "680687",
+          // pincode: "680687",
         },
       } as Employee);
     employeeRepository.findOneBy = mockfn;
@@ -66,7 +66,7 @@ describe("Employee Service", () => {
   it("should delete an employee", async () => {
     let mockAddress = new Address();
     mockAddress.line = "Thrissur";
-    mockAddress.pincode = "680687";
+    // mockAddress.pincode = "680687";
     let mockDepartment = new Department();
     mockDepartment.name = "Human Resources";
     const mockEmployee: Partial<Employee> = {
@@ -96,7 +96,7 @@ describe("Employee Service", () => {
   it("should create an employee", async () => {
     let mockAddress = new Address();
     mockAddress.line = "Thrissur";
-    mockAddress.pincode = "680687";
+    // mockAddress.pincode = "680687";
     let mockDepartment = new Department();
     mockDepartment.name = "Human Resources";
     const mockEmployee: Partial<Employee> = {
@@ -126,7 +126,7 @@ describe("Employee Service", () => {
   it("should update an employee", async () => {
     let mockAddress = new Address();
     mockAddress.line = "Thrissur";
-    mockAddress.pincode = "680687";
+    // mockAddress.pincode = "680687";
     let mockDepartment = new Department();
     mockDepartment.name = "Human Resources";
     const mockEmployee: Partial<Employee> = {

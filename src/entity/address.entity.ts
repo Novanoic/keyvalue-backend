@@ -18,8 +18,8 @@ class Address extends AbstractEntity {
   @Column()
   line: string;
 
-  @Column()
-  pincode: string;
+  // @Column()
+  // pincode: string;
 
   @OneToOne(() => Employee, (employee) => employee.address)
   @JoinColumn()

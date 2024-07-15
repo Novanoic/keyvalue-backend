@@ -34,12 +34,18 @@ class Employee extends AbstractEntity {
   })
   address: Address;
 
-  @ManyToOne(() => Department, (department) => department.employee)
+  @ManyToOne(() => Department, (department) => department.employee, {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
   @JoinColumn({ name: "department_name", referencedColumnName: "name" })
   department: Department;
 
   @Column()
   role: Role;
+
+  @Column()
+  
 
   @Column()
   password: string;

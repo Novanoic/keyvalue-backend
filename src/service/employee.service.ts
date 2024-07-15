@@ -75,7 +75,7 @@ export class EmployeeService {
 
     const newAddress = new Address();
     newAddress.line = address.line;
-    newAddress.pincode = address.pincode;
+    // newAddress.pincode = address.pincode;
 
     newEmployee.address = newAddress;
 
@@ -125,7 +125,7 @@ export class EmployeeService {
     employee.age = age;
     employee.department.name = updatedDepartment.name;
     employee.address.line = address.line;
-    employee.address.pincode = address.pincode;
+    // employee.address.pincode = address.pincode;
     employee.role = role;
     employee.password = password ? await bcrypt.hash(password, 10) : "";
 
