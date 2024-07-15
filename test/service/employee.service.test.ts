@@ -7,6 +7,9 @@ import Address from "../../src/entity/address.entity";
 import Department from "../../src/entity/department.entity";
 import { DepartmentService } from "../../src/service/department.service";
 import { DepartmentRepository } from "../../src/repository/department.repository";
+import jsonwebtoken from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import { JWT_SECRET, JWT_VALIDITY } from "../../src/utils/constants";
 
 describe("Employee Service", () => {
   let employeeRepository: EmployeeRepository;
@@ -164,29 +167,28 @@ describe("Employee Service", () => {
 
     expect(user1.name).toEqual("Govind");
   });
-  // it("should verify an employee login", async () => {
-  //   let mockAddress = new Address();
-  //   mockAddress.line = "Thrissur";
-  //   mockAddress.pincode = "680687";
-  //   let mockDepartment = new Department();
-  //   mockDepartment.name = "Human Resources";
-  //   const mockEmployee: Partial<Employee> = {
-  //     id: 1,
-  //     name: "Nalin",
-  //     email: "nalingovind@gmail.com",
-  //     age: 22,
-  //     role: Role.HR,
-  //     address: mockAddress,
-  //     department: mockDepartment,
-  //   };
-  //   const mockfn2 = jest
-  //     .fn(employeeRepository.findOneBy)
-  //     .mockResolvedValue(mockEmployee as Employee);
-  //   employeeRepository.findOneBy = mockfn2;
-  //   // const mockfn1 = jest.fn()
-  //   // const mockfn1 = jest
-  //   //   .fn(employeeService.)
-  //   //   .mockResolvedValue(mockEmployee as Employee);
-  //   // employeeRepository.findOneBy = mockfn1;
-  // });
+  it("should verify an employee login", async () => {
+    const payLoad = {
+      name: "Nalin Govind V",
+      email: "nalingovind@gmail.com",
+      role: Role.CEO,
+    };
+    const mockfn = jest
+      .fn(employeeRepository.findOneBy)
+      .mockResolvedValue(payLoad as Employee);
+    employeeRepository.findOneBy = mockfn;
+    const mockfn2 = jest.fn(bcrypt.compare).mockResolvedValue(true as never);
+    bcrypt.compare = mockfn2;
+    const expectedToken = {
+      token: jsonwebtoken.sign(payLoad, JWT_SECRET, {
+        expiresIn: JWT_VALIDITY,
+      }),
+    };
+
+    const authToken = await employeeService.loginEmployee(
+      payLoad.email,
+      "Nalin@007"
+    );
+    expect(authToken).toEqual(expectedToken);
+  });
 });
