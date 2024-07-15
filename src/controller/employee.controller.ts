@@ -117,11 +117,13 @@ class EmployeeController {
         const employees = await this.employeeService.createEmployee(
           employeeDto.email,
           employeeDto.name,
-          employeeDto.age,
+          employeeDto.jdate,
           employeeDto.address,
           employeeDto.department,
           employeeDto.role,
-          employeeDto.password
+          employeeDto.password,
+          employeeDto.status,
+          employeeDto.experience
         );
         res.status(201).send(employees);
       }
@@ -181,11 +183,13 @@ class EmployeeController {
           Number(req.params.id),
           employeeDto.email,
           employeeDto.name,
-          employeeDto.age,
+          employeeDto.jdate,
           employeeDto.address,
           employeeDto.department,
           employeeDto.role,
-          employeeDto.password
+          employeeDto.password,
+          employeeDto.status,
+          employeeDto.experience
         );
         res.status(200).send(employees);
       }

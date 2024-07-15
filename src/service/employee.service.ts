@@ -13,6 +13,8 @@ import { ErrorCodes } from "../utils/error.codes";
 import Department from "../entity/department.entity";
 import { DepartmentService } from "./department.service";
 import HttpException from "../exceptions/http.exception";
+import { Status } from "../utils/status.enums";
+import { stat } from "fs";
 
 export class EmployeeService {
   constructor(
@@ -55,18 +57,22 @@ export class EmployeeService {
   createEmployee = async (
     email: string,
     name: string,
-    age: number,
+    jdate: Date,
     address: any,
     department: any,
     role: Role,
-    password: string
+    password: string,
+    status: Status,
+    experience: string
   ): Promise<Employee> => {
     const newEmployee = new Employee();
     newEmployee.email = email;
     newEmployee.name = name;
-    newEmployee.age = age;
+    newEmployee.jdate = jdate;
     newEmployee.role = role;
     newEmployee.password = password ? await bcrypt.hash(password, 10) : "";
+    newEmployee.status = status;
+    newEmployee.experience = experience;
 
     const employeeDepartment = new Department();
     employeeDepartment.name = department.name;
@@ -96,11 +102,13 @@ export class EmployeeService {
     id: number,
     email: string,
     name: string,
-    age: number,
+    jdate: Date,
     address: any,
     department: any,
     role: Role,
-    password: string
+    password: string,
+    status: Status,
+    experience: string
   ): Promise<Employee> => {
     const employee = await this.employeerepository.findOneBy({ id });
     if (!employee) {
@@ -122,7 +130,9 @@ export class EmployeeService {
     }
     employee.name = name;
     employee.email = email;
-    employee.age = age;
+    employee.jdate = jdate;
+    employee.status = status;
+    employee.experience = experience;
     employee.department.name = updatedDepartment.name;
     employee.address.line = address.line;
     // employee.address.pincode = address.pincode;

@@ -10,6 +10,7 @@ import { DepartmentRepository } from "../../src/repository/department.repository
 import jsonwebtoken from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { JWT_SECRET, JWT_VALIDITY } from "../../src/utils/constants";
+import { Status } from "../../src/utils/status.enums";
 
 describe("Employee Service", () => {
   let employeeRepository: EmployeeRepository;
@@ -48,20 +49,25 @@ describe("Employee Service", () => {
       .calledWith({ id: 1 })
       .mockResolvedValue({
         id: 1,
-        name: "Nalin",
-        email: "nalingovind@gmail.com",
-        age: 22,
-        role: "Developer",
+        email: "sajita@gmail.com",
+        name: "Sajita",
+        jdate: new Date("2022-12-12"),
         address: {
           line: "Thrissur",
-          // pincode: "680687",
         },
+        department: {
+          name: "Human Resources",
+        },
+        role: "HR",
+        password: "Sajita@007",
+        status: "Active",
+        experience: "10 Years",
       } as Employee);
     employeeRepository.findOneBy = mockfn;
 
     const user1 = await employeeService.getEmployeeById(1);
     if (!user1) return;
-    expect(user1.name).toEqual("Nalin");
+    expect(user1.name).toEqual("Sajita");
   });
   it("should delete an employee", async () => {
     let mockAddress = new Address();
@@ -73,10 +79,12 @@ describe("Employee Service", () => {
       id: 1,
       name: "Nalin",
       email: "nalingovind@gmail.com",
-      age: 22,
+      jdate: new Date("2022-12-12"),
       role: Role.HR,
       address: mockAddress,
       department: mockDepartment,
+      status: Status.Active,
+      experience: "5 Years",
     };
 
     const mockfn1 = jest.fn();
@@ -102,10 +110,12 @@ describe("Employee Service", () => {
     const mockEmployee: Partial<Employee> = {
       name: "Nalin",
       email: "nalingovind@gmail.com",
-      age: 22,
+      jdate: new Date("2022-12-12"),
       role: Role.HR,
       address: mockAddress,
       department: mockDepartment,
+      status: Status.Active,
+      experience: "5 Years",
     };
     const mockfn = jest
       .fn(employeeRepository.create)
@@ -114,12 +124,14 @@ describe("Employee Service", () => {
 
     const user1 = await employeeService.createEmployee(
       "nalingovind@gmail.com",
-      "Nalin",
-      22,
+      "Govind",
+      new Date("2022-12-12"),
       mockAddress,
       mockDepartment,
       Role.UI,
-      "Nalin@007"
+      "Nalin@007",
+      Status.Active,
+      "10 Years"
     );
     expect(user1.name).toEqual("Nalin");
   });
@@ -133,10 +145,12 @@ describe("Employee Service", () => {
       id: 1,
       name: "Nalin",
       email: "nalingovind@gmail.com",
-      age: 22,
+      jdate: new Date("2022-12-12"),
       role: Role.HR,
       address: mockAddress,
       department: mockDepartment,
+      status: Status.Active,
+      experience: "5 Years",
     };
 
     const mockfn1 = jest
@@ -158,11 +172,13 @@ describe("Employee Service", () => {
       1,
       "nalingovind@gmail.com",
       "Govind",
-      22,
+      new Date("2022-12-12"),
       mockAddress,
       mockDepartment,
       Role.UI,
-      "Nalin@007"
+      "Nalin@007",
+      Status.Active,
+      "10 Years"
     );
 
     expect(user1.name).toEqual("Govind");

@@ -16,6 +16,7 @@ import AbstractEntity from "./abstract-entity";
 import Address from "./address.entity";
 import Department from "./department.entity";
 import { Role } from "../utils/role.enums";
+import { Status } from "../utils/status.enums";
 
 @Entity()
 class Employee extends AbstractEntity {
@@ -26,7 +27,7 @@ class Employee extends AbstractEntity {
   name: string;
 
   @Column()
-  age: number;
+  jdate: Date;
 
   @OneToOne(() => Address, (address) => address.employee, {
     cascade: true,
@@ -45,7 +46,10 @@ class Employee extends AbstractEntity {
   role: Role;
 
   @Column()
-  
+  status: Status;
+
+  @Column()
+  experience: string;
 
   @Column()
   password: string;

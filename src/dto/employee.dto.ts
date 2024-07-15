@@ -1,4 +1,5 @@
 import {
+  IsDate,
   IsEmail,
   IsEnum,
   IsNotEmpty,
@@ -15,6 +16,7 @@ import Address from "../entity/address.entity";
 import { Type } from "class-transformer";
 import "reflect-metadata";
 import { Role } from "../utils/role.enums";
+import { Status } from "../utils/status.enums";
 
 export class CreateEmployeeDto {
   @IsNotEmpty()
@@ -27,8 +29,9 @@ export class CreateEmployeeDto {
   email: string;
 
   @IsNotEmpty()
-  @IsNumber()
-  age: number;
+  @IsDate()
+  @Type(() => Date)
+  jdate: Date;
 
   @IsNotEmpty()
   @ValidateNested({ each: true })
@@ -43,6 +46,14 @@ export class CreateEmployeeDto {
   @IsNotEmpty()
   @IsString()
   password: string;
+
+  @IsNotEmpty()
+  @IsString()
+  experience: string;
+
+  @IsNotEmpty()
+  @IsEnum(Status)
+  status: Status;
 
   @IsNotEmpty()
   @IsEnum(Role)
