@@ -2,7 +2,7 @@ import { plainToInstance } from "class-transformer";
 import HttpException from "../exceptions/http.exception";
 import { EmployeeService } from "../service/employee.service";
 import express from "express";
-import { CreateEmployeeDto } from "../dto/employee.dto";
+import { CreateEmployeeDto, UpdateEmployeeDto } from "../dto/employee.dto";
 import { validate } from "class-validator";
 import { ValidationMetadata } from "class-validator/types/metadata/ValidationMetadata";
 import ValidationException from "../exceptions/validation.exception";
@@ -21,7 +21,7 @@ class EmployeeController {
 
     this.router.get("/", authorize, this.getAllEmployees);
     this.router.get("/:id", authorize, this.getEmployeeById);
-    this.router.put("/:id", authorize, this.updateEmployee);
+    this.router.patch("/:id", authorize, this.updateEmployee);
     this.router.post("/", authorize, this.createEmployee);
     this.router.delete("/:id", authorize, this.removeEmployee);
     this.router.post("/login", this.loginEmployee);
@@ -173,7 +173,7 @@ class EmployeeController {
         console.log(req.name);
         throw new EntityNotFoundException(ErrorCodes.UNAUTHORIZED);
       } else {
-        const employeeDto = plainToInstance(CreateEmployeeDto, req.body);
+        const employeeDto = plainToInstance(UpdateEmployeeDto, req.body);
         const errors = await validate(employeeDto);
         if (errors.length) {
           console.log(errors);
@@ -187,7 +187,7 @@ class EmployeeController {
           employeeDto.address,
           employeeDto.department,
           employeeDto.role,
-          employeeDto.password,
+          // employeeDto.password,
           employeeDto.status,
           employeeDto.experience
         );

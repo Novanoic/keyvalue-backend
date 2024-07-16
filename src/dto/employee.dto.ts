@@ -59,3 +59,41 @@ export class CreateEmployeeDto {
   @IsEnum(Role)
   role: Role;
 }
+
+export class UpdateEmployeeDto {
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
+  @IsEmail()
+  @IsNotEmpty()
+  @IsString()
+  email: string;
+
+  @IsNotEmpty()
+  @IsDate()
+  @Type(() => Date)
+  jdate: Date;
+
+  @IsNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => CreateAddressDto)
+  address: CreateAddressDto;
+
+  @IsNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => CreateDepartmentDto)
+  department: CreateDepartmentDto;
+
+  @IsNotEmpty()
+  @IsString()
+  experience: string;
+
+  @IsNotEmpty()
+  @IsEnum(Status)
+  status: Status;
+
+  @IsNotEmpty()
+  @IsEnum(Role)
+  role: Role;
+}

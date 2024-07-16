@@ -106,7 +106,7 @@ export class EmployeeService {
     address: any,
     department: any,
     role: Role,
-    password: string,
+    // password: string,
     status: Status,
     experience: string
   ): Promise<Employee> => {
@@ -137,7 +137,7 @@ export class EmployeeService {
     employee.address.line = address.line;
     // employee.address.pincode = address.pincode;
     employee.role = role;
-    employee.password = password ? await bcrypt.hash(password, 10) : "";
+    // employee.password = password ? await bcrypt.hash(password, 10) : "";
 
     return this.employeerepository.create(employee);
   };

@@ -72,7 +72,6 @@ describe("Employee Service", () => {
   it("should delete an employee", async () => {
     let mockAddress = new Address();
     mockAddress.line = "Thrissur";
-    // mockAddress.pincode = "680687";
     let mockDepartment = new Department();
     mockDepartment.name = "Human Resources";
     const mockEmployee: Partial<Employee> = {
@@ -104,7 +103,6 @@ describe("Employee Service", () => {
   it("should create an employee", async () => {
     let mockAddress = new Address();
     mockAddress.line = "Thrissur";
-    // mockAddress.pincode = "680687";
     let mockDepartment = new Department();
     mockDepartment.name = "Human Resources";
     const mockEmployee: Partial<Employee> = {
@@ -138,7 +136,6 @@ describe("Employee Service", () => {
   it("should update an employee", async () => {
     let mockAddress = new Address();
     mockAddress.line = "Thrissur";
-    // mockAddress.pincode = "680687";
     let mockDepartment = new Department();
     mockDepartment.name = "Human Resources";
     const mockEmployee: Partial<Employee> = {
@@ -176,7 +173,7 @@ describe("Employee Service", () => {
       mockAddress,
       mockDepartment,
       Role.UI,
-      "Nalin@007",
+      // "Nalin@007",
       Status.Active,
       "10 Years"
     );

@@ -6,12 +6,14 @@ import loggerMiddleware from "./middleware/logger.middleware";
 import bodyParser from "body-parser";
 import dataSource from "./db/data-source.db";
 import errorMiddleware from "./middleware/error.middleware";
+import cors from "cors";
 // import loginRouter from "./routes/login.routes";
 
 const server = new express();
 
 server.use(bodyParser.json());
 server.use(loggerMiddleware);
+server.use(cors());
 server.use("/employees", employeeRouter);
 server.use("/department", departmentRouter);
 // server.use("/login", loginRouter);
